@@ -18,81 +18,96 @@ typedef struct {
 cube loon_cube = {
     .game_pos = {
         .vec1 = {
-            .x = -200,
+            .x = -100,
             .y = -100,
-            .z = 1
+            .z = -100
         },
         .vec2 = {
-            .x = -200,
+            .x = -100,
             .y = 100,
-            .z = 1
+            .z = -100
         },
         .vec3 = {
-            .x = 200,
+            .x = 100,
             .y = 100,
-            .z = 1
+            .z = -100
         },
         .vec4 = {
-            .x = 200,
+            .x = 100,
             .y = -100,
-            .z = 1
+            .z = -100
         },
         .vec5 = {
-            .x = -200,
+            .x = -100,
             .y = -100,
-            .z = 10
+            .z = 100
         },
         .vec6 = {
-            .x = -200,
+            .x = -100,
             .y = 100,
-            .z = 10
+            .z = 100
         },
         .vec7 = {
-            .x = 200,
+            .x = 100,
             .y = 100,
-            .z = 10
+            .z = 100
         },
         .vec8 = {
-            .x = 200,
+            .x = 100,
             .y = -100,
-            .z = 10
+            .z = 100
         }
     },
     .rendered_pos = {
         .vec1 = {
             .x = -200,
-            .y = -100
+            .y = -10
         },
         .vec2 = {
             .x = -200,
-            .y = 100
+            .y = 10
         },
         .vec3 = {
             .x = 200,
-            .y = 100
+            .y = 10
         },
         .vec4 = {
             .x = 200,
-            .y = -100
+            .y = -10
         },
         .vec5 = {
             .x = -200,
-            .y = -100
+            .y = -10
         },
         .vec6 = {
             .x = -200,
-            .y = 100
+            .y = 10
         },
         .vec7 = {
             .x = 200,
-            .y = 100
+            .y = 10
         },
         .vec8 = {
             .x = 200,
-            .y = -100
+            .y = -10
         }
     }
 };
+
+void print_vector(vec3F vector) {
+    printf(" %f %f %f ", vector.x, vector.y, vector.z);
+}
+void print_cube(mat3x8F cube) {
+    print_vector(cube.vec1);
+    print_vector(cube.vec2);
+    print_vector(cube.vec3);
+    print_vector(cube.vec4);
+    print_vector(cube.vec5);
+    print_vector(cube.vec6);
+    print_vector(cube.vec7);
+    print_vector(cube.vec8);
+
+}
 
 int render_map(type render_type, float value) {
     int return_value = -1;
@@ -116,8 +131,8 @@ void perspective_projection_vector(vec3F game_vector, vec2F* projected_vector) {
 
 void weak_perspective_projection_vector(vec3F game_vector, vec2F* projected_vector) {
     // if(game_vector.z + FOCAL_LENGTH != 0) {
-        projected_vector -> x = (game_vector.x * FOCAL_LENGTH) / (game_vector.z + FOCAL_LENGTH);
-        projected_vector -> y = (game_vector.y * FOCAL_LENGTH) / (game_vector.z + FOCAL_LENGTH);
+        projected_vector -> x = (game_vector.x * FOCAL_LENGTH) / ((game_vector.z - GAME_DEPTH / 2) + FOCAL_LENGTH);
+        projected_vector -> y = (game_vector.y * FOCAL_LENGTH) / ((game_vector.z - GAME_DEPTH / 2) + FOCAL_LENGTH);
     // }
 }
 
@@ -146,14 +161,14 @@ void weak_perspective_projection_matrix(mat3x8F game_matrix, mat2x8F* projected_
 void multiply_vector(vec3F* vector, mat3x3F multiply_matrix) {
     vec3F copy_vector = *vector;
     vector -> x = multiply_matrix.vec1.x * copy_vector.x +
-        multiply_matrix.vec2.x * copy_vector.y +
-        multiply_matrix.vec3.x * copy_vector.z;
+                  multiply_matrix.vec2.x * copy_vector.y +
+                  multiply_matrix.vec3.x * copy_vector.z;
     vector -> y = multiply_matrix.vec1.y * copy_vector.x +
-        multiply_matrix.vec2.y * copy_vector.y +
-        multiply_matrix.vec3.y * copy_vector.z;
+                  multiply_matrix.vec2.y * copy_vector.y +
+                  multiply_matrix.vec3.y * copy_vector.z;
     vector -> z = multiply_matrix.vec1.z * copy_vector.x +
-        multiply_matrix.vec2.z * copy_vector.y +
-        multiply_matrix.vec3.z * copy_vector.z;
+                  multiply_matrix.vec2.z * copy_vector.y +
+                  multiply_matrix.vec3.z * copy_vector.z;
 }
 
 void multiply_matrix(mat3x8F* matrix, mat3x3F multiply_matrix) {
@@ -194,10 +209,10 @@ void rotate_matrix(mat3x8F* matrix, type rotation_type, float degrees) {
 
         rotation_matrix.vec2.x = 0;
         rotation_matrix.vec2.y = cos(radians);
-        rotation_matrix.vec2.z = sin(radians);
+        rotation_matrix.vec2.z = -sin(radians);
 
         rotation_matrix.vec3.x = 0;
-        rotation_matrix.vec3.y = -sin(radians);
+        rotation_matrix.vec3.y = sin(radians);
         rotation_matrix.vec3.z = cos(radians);
         break;
     case TYPE_Y:
@@ -277,11 +292,12 @@ void process_input() {
 }
 
 void setup() {
+    rotate_matrix(&loon_cube.game_pos, TYPE_Y, 20);
     weak_perspective_projection_matrix(loon_cube.game_pos, &loon_cube.rendered_pos);
 }
 
 void update() {
-    rotate_matrix(&loon_cube.game_pos, TYPE_Z, 0.1);
+    rotate_matrix(&loon_cube.game_pos, TYPE_Y, 0.1);
     weak_perspective_projection_matrix(loon_cube.game_pos, &loon_cube.rendered_pos);
 }
 
@@ -326,6 +342,7 @@ void destroy_window() {
 }
 
 int main (int argc, char* argv[]) {
+    // printf("What is the direction you would like the cube to spin (0 - X, 1 - Y, 2 - Z): ");
     game_is_running = initialize_window();
 
     setup();
@@ -334,7 +351,7 @@ int main (int argc, char* argv[]) {
         update();
         render();
     }
-
+    print_cube(loon_cube.game_pos);
     destroy_window();
 
     return EXIT_SUCCESS;

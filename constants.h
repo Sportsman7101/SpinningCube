@@ -1,12 +1,14 @@
 #define WINDOW_WIDTH 720
 #define WINDOW_HEIGHT 600
 
+#define GAME_DEPTH 500
+
 #define FALSE 0
 #define TRUE 1
 
 #define PI 3.14159
 
-#define FOCAL_LENGTH 10
+#define FOCAL_LENGTH 50000
 
 typedef struct {
     float x;

@@ -118,6 +118,8 @@ int render_map(type render_type, float value) {
     case TYPE_Y:
         return_value = value + WINDOW_HEIGHT / 2;
         break;
+    default:
+        break;
     }
     return return_value;
 }

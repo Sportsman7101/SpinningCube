@@ -15,7 +15,7 @@ typedef struct {
     mat2x8F rendered_pos;
 } cube;
 
-cube loon_cube = {
+cube shown_cube = {
     .game_pos = {
         .vec1 = {
             .x = -100,
@@ -294,13 +294,13 @@ void process_input() {
 }
 
 void setup() {
-    rotate_matrix(&loon_cube.game_pos, TYPE_Y, 20);
-    weak_perspective_projection_matrix(loon_cube.game_pos, &loon_cube.rendered_pos);
+    rotate_matrix(&shown_cube.game_pos, TYPE_Y, 20);
+    weak_perspective_projection_matrix(shown_cube.game_pos, &shown_cube.rendered_pos);
 }
 
 void update() {
-    rotate_matrix(&loon_cube.game_pos, TYPE_Y, 0.1);
-    weak_perspective_projection_matrix(loon_cube.game_pos, &loon_cube.rendered_pos);
+    rotate_matrix(&shown_cube.game_pos, TYPE_Y, 0.1);
+    weak_perspective_projection_matrix(shown_cube.game_pos, &shown_cube.rendered_pos);
 }
 
 void draw_line(vec2F start_point, vec2F end_point) {
@@ -315,18 +315,18 @@ void draw_line(vec2F start_point, vec2F end_point) {
 
 void render_cube() {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-    draw_line(loon_cube.rendered_pos.vec1, loon_cube.rendered_pos.vec2);
-    draw_line(loon_cube.rendered_pos.vec1, loon_cube.rendered_pos.vec4);
-    draw_line(loon_cube.rendered_pos.vec1, loon_cube.rendered_pos.vec5);
-    draw_line(loon_cube.rendered_pos.vec6, loon_cube.rendered_pos.vec2);
-    draw_line(loon_cube.rendered_pos.vec6, loon_cube.rendered_pos.vec5);
-    draw_line(loon_cube.rendered_pos.vec6, loon_cube.rendered_pos.vec7);
-    draw_line(loon_cube.rendered_pos.vec3, loon_cube.rendered_pos.vec2);
-    draw_line(loon_cube.rendered_pos.vec3, loon_cube.rendered_pos.vec4);
-    draw_line(loon_cube.rendered_pos.vec3, loon_cube.rendered_pos.vec7);
-    draw_line(loon_cube.rendered_pos.vec8, loon_cube.rendered_pos.vec4);
-    draw_line(loon_cube.rendered_pos.vec8, loon_cube.rendered_pos.vec5);
-    draw_line(loon_cube.rendered_pos.vec8, loon_cube.rendered_pos.vec7);
+    draw_line(shown_cube.rendered_pos.vec1, shown_cube.rendered_pos.vec2);
+    draw_line(shown_cube.rendered_pos.vec1, shown_cube.rendered_pos.vec4);
+    draw_line(shown_cube.rendered_pos.vec1, shown_cube.rendered_pos.vec5);
+    draw_line(shown_cube.rendered_pos.vec6, shown_cube.rendered_pos.vec2);
+    draw_line(shown_cube.rendered_pos.vec6, shown_cube.rendered_pos.vec5);
+    draw_line(shown_cube.rendered_pos.vec6, shown_cube.rendered_pos.vec7);
+    draw_line(shown_cube.rendered_pos.vec3, shown_cube.rendered_pos.vec2);
+    draw_line(shown_cube.rendered_pos.vec3, shown_cube.rendered_pos.vec4);
+    draw_line(shown_cube.rendered_pos.vec3, shown_cube.rendered_pos.vec7);
+    draw_line(shown_cube.rendered_pos.vec8, shown_cube.rendered_pos.vec4);
+    draw_line(shown_cube.rendered_pos.vec8, shown_cube.rendered_pos.vec5);
+    draw_line(shown_cube.rendered_pos.vec8, shown_cube.rendered_pos.vec7);
     SDL_RenderPresent(renderer);
 }
 
@@ -353,7 +353,7 @@ int main (int argc, char* argv[]) {
         update();
         render();
     }
-    print_cube(loon_cube.game_pos);
+    print_cube(shown_cube.game_pos);
     destroy_window();
 
     return EXIT_SUCCESS;
